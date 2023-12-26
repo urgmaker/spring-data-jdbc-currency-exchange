@@ -30,7 +30,7 @@ public class CurrencyRepositoryImpl implements CurrencyRepository, RowMapper<Cur
     public void save(Currency currency) {
         this.jdbcOperations.update("""
                 insert into c_currencies(c_id, c_code, c_full_name, c_sign) values (?, ?, ?, ?)
-                """, new Object[]{currency.getId(), currency.getCode(), currency.getFullName(), currency.getSign()});
+                """, currency.getId(), currency.getCode(), currency.getFullName(), currency.getSign());
     }
 
     @Override
