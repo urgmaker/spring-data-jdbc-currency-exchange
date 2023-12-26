@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  postgres:
+    container_name: postgres_currencies_container
+    image: postgres
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "pass"
+      POSTGRES_DB: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+      - ./create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+networks:
+  postgres:
+    driver: bridge
+volumes:
+  postgres: {}

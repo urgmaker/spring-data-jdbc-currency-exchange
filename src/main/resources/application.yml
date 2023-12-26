@@ -1,3 +1,8 @@
 spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: jdbc:tc:postgresql:16:///sandbox?TC_DAEMON=true
+    url: jdbc:postgresql://localhost:5432/project_3
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 'pass'
