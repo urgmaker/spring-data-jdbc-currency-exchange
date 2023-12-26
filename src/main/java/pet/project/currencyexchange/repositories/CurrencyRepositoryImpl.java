@@ -2,6 +2,7 @@ package pet.project.currencyexchange.repositories;
 
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 import pet.project.currencyexchange.model.Currency;
 
 import java.sql.ResultSet;
@@ -9,6 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class CurrencyRepositoryImpl implements CurrencyRepository, RowMapper<Currency> {
     private final JdbcOperations jdbcOperations;
 
