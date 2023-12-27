@@ -1,8 +1,22 @@
+server:
+  port: 8181
+
 spring:
+  datasource:
+    hikari:
+      jdbc-url: jdbc:postgresql://localhost:5432/project_3
+      driver-class-name: org.postgresql.Driver
+      username: postgres
+      password: pass
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-  datasource:
-    url: jdbc:postgresql://localhost:5432/project_3
-    driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: 'pass'
+    database: POSTGRESQL
+    show-sql: true
+  mvc:
+    path match:
+      matching-strategy: ant_path_matcher
+  liquibase:
+    enabled: true
+    drop-first: false
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    default-schema: public
