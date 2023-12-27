@@ -1,5 +1,6 @@
 package pet.project.currencyexchange.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import pet.project.currencyexchange.model.ExchangeRate;
+import pet.project.currencyexchange.model.NewExchangeRatePayload;
 import pet.project.currencyexchange.repositories.ExchangeRateRepositoryImpl;
 import pet.project.currencyexchange.util.ErrorsPresentation;
 
@@ -21,6 +23,7 @@ public class ExchangeRateController {
 
     private final MessageSource messageSource;
 
+    @Autowired
     public ExchangeRateController(ExchangeRateRepositoryImpl exchangeRateRepository, MessageSource messageSource) {
         this.exchangeRateRepository = exchangeRateRepository;
         this.messageSource = messageSource;
@@ -33,21 +36,21 @@ public class ExchangeRateController {
                 .body(this.exchangeRateRepository.findAll());
     }
 
-    @GetMapping("exchangeRate/{baseCurrencyId}{targetCurrencyId}")
-    public ResponseEntity<ExchangeRate> handleExchangeRatesByCode(@PathVariable("baseCurrencyId") String baseCurrencyId,
-                                                                  @PathVariable("targetCurrencyId") String targetCurrencyId) {
-        return ResponseEntity.of(this.exchangeRateRepository.findByCodes(baseCurrencyId, targetCurrencyId));
+    @GetMapping("exchangeRate/{baseCurrencyId}/{targetCurrencyId}")
+    public ResponseEntity<ExchangeRate> handleExchangeRatesByCode(@PathVariable("baseCurrencyId") Integer baseCurrencyId,
+                                                                  @PathVariable("targetCurrencyId") Integer targetCurrencyId) {
+        return ResponseEntity.of(this.exchangeRateRepository.findById(baseCurrencyId, targetCurrencyId));
     }
 
     @PostMapping("exchangeRates")
     @Transactional
     public ResponseEntity<?> handleAddExchangeRate(
-            @RequestBody ExchangeRate payloadExchangeRate,
+            @RequestBody NewExchangeRatePayload payloadExchangeRate,
             UriComponentsBuilder uriComponentsBuilder,
             Locale locale) {
-        if (payloadExchangeRate.getBaseCurrencyId() == null || payloadExchangeRate.getBaseCurrencyId().isBlank() &&
-                payloadExchangeRate.getTargetCurrencyId() == null || payloadExchangeRate.getTargetCurrencyId().isBlank() &&
-                payloadExchangeRate.getRate() == null) {
+        if (payloadExchangeRate.getBaseCurrencyId() == null &&
+            payloadExchangeRate.getTargetCurrencyId() == null &&
+            payloadExchangeRate.getRate() == null) {
             final String message = this.messageSource.getMessage("currencies.create.details.errors.not_set",
                     new Object[0], locale);
 
