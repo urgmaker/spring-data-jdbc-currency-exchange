@@ -1,5 +1,6 @@
 package pet.project.currencyexchange.repositories;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,7 @@ import java.util.UUID;
 public class CurrencyRepositoryImpl implements CurrencyRepository, RowMapper<Currency> {
     private final JdbcOperations jdbcOperations;
 
+    @Autowired
     public CurrencyRepositoryImpl(JdbcOperations jdbcOperations) {
         this.jdbcOperations = jdbcOperations;
     }
@@ -29,22 +31,22 @@ public class CurrencyRepositoryImpl implements CurrencyRepository, RowMapper<Cur
     @Override
     public void save(Currency currency) {
         this.jdbcOperations.update("""
-                insert into c_currencies(c_id, c_code, c_full_name, c_sign) values (?, ?, ?, ?)
-                """, currency.getId(), currency.getCode(), currency.getFullName(), currency.getSign());
+                insert into c_currencies(c_code, c_full_name, c_sign) values (?, ?, ?)
+                """, currency.getCode(), currency.getFullName(), currency.getSign());
     }
 
     @Override
     public Optional<Currency> findByCode(String code) {
         return this.jdbcOperations.query("""
-                        select * from c_currencies where code = ?
-                        """, new Object[]{code}, this)
+                                select * from c_currencies where c_code = ?""",
+                        new Object[]{code}, this)
                 .stream().findFirst();
     }
 
     @Override
     public Currency mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Currency(
-                rs.getObject("c_id", UUID.class),
+                rs.getLong("c_id"),
                 rs.getString("c_code"),
                 rs.getString("c_full_name"),
                 rs.getString("c_sign"));
