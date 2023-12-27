@@ -12,11 +12,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class ExchangeRate {
-    private UUID id;
-    private String baseCurrencyId;
-    private String targetCurrencyId;
+    private Long id;
+    private Integer baseCurrencyId;
+    private Integer targetCurrencyId;
     private Double rate;
 
-    public ExchangeRate(String baseCurrencyId, String targetCurrencyId, Double rate) {
+    public ExchangeRate(Integer baseCurrencyId, Integer targetCurrencyId, Double rate) {
     }
 }
