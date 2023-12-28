@@ -12,6 +12,7 @@ import pet.project.currencyexchange.model.NewExchangeRatePayload;
 import pet.project.currencyexchange.repositories.ExchangeRateRepositoryImpl;
 import pet.project.currencyexchange.util.ErrorsPresentation;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -64,9 +65,17 @@ public class ExchangeRateController {
                     payloadExchangeRate.getRate());
 
             this.exchangeRateRepository.save(exchangeRate);
-            return ResponseEntity.created(uriComponentsBuilder
-                            .path("api/exchangeRates/{id}")
-                            .build(Map.of("id", exchangeRate.getId()))).contentType(MediaType.APPLICATION_JSON)
+
+            URI uri = null;
+            if (exchangeRate.getId() != null) {
+                uri = uriComponentsBuilder
+                        .path("api/exchangeRates/{id}")
+                        .build(Map.of("id", exchangeRate.getId()));
+            } else {
+                uri = uriComponentsBuilder.path("api/exchangeRates").build().toUri();
+            }
+            return ResponseEntity.created(uri)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .body(exchangeRate);
         }
     }

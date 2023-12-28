@@ -12,6 +12,7 @@ import pet.project.currencyexchange.model.NewCurrencyPayload;
 import pet.project.currencyexchange.repositories.CurrencyRepositoryImpl;
 import pet.project.currencyexchange.util.ErrorsPresentation;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -54,9 +55,17 @@ public class CurrencyController {
         } else {
             Currency currency = new Currency(payloadCurrency.getCode(), payloadCurrency.getFullName(), payloadCurrency.getSign());
             this.currencyRepository.save(currency);
-            return ResponseEntity.created(uriComponentsBuilder
-                            .path("api/currencies/{id}")
-                            .build(Map.of("id", currency.getId())))
+
+            URI uri = null;
+            if (currency.getId() != null) {
+                uri = uriComponentsBuilder
+                        .path("api/currencies/{id}")
+                        .build(Map.of("id", currency.getId()));
+            } else {
+                uri = uriComponentsBuilder.path("api/currencies").build().toUri();
+            }
+
+            return ResponseEntity.created(uri)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(currency);
         }

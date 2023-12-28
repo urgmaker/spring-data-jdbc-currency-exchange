@@ -3,13 +3,10 @@ package pet.project.currencyexchange.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class ExchangeRate {
     private Long id;
@@ -18,5 +15,8 @@ public class ExchangeRate {
     private Double rate;
 
     public ExchangeRate(Integer baseCurrencyId, Integer targetCurrencyId, Double rate) {
+        this.baseCurrencyId = baseCurrencyId;
+        this.targetCurrencyId = targetCurrencyId;
+        this.rate = rate;
     }
 }
