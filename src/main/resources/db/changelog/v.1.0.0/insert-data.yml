@@ -1,0 +1,65 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-data
+      author: urgmaker
+      changes:
+        - insert:
+            tableName: c_currencies
+            columns:
+              - column:
+                  name: c_code
+                  value: USD
+              - column:
+                  name: c_full_name
+                  value: US Dollar
+              - column:
+                  name: c_sign
+                  value: $
+  - changeSet:
+      id: insert-data-2
+      author: urgmaker
+      changes:
+        - insert:
+            tableName: c_currencies
+            columns:
+              - column:
+                  name: c_code
+                  value: EUR
+              - column:
+                  name: c_full_name
+                  value: Euro
+              - column:
+                  name: c_sign
+                  value: €
+  - changeSet:
+      id: insert-data-3
+      author: urgmaker
+      changes:
+        - insert:
+            tableName: e_exchangeRates
+            columns:
+              - column:
+                  name: e_base_currency_id
+                  value: 1
+              - column:
+                  name: e_target_currency_id
+                  value: 3
+              - column:
+                  name: e_rate
+                  value: 63.75
+  - changeSet:
+      id: insert-data-4
+      author: urgmaker
+      changes:
+        - insert:
+            tableName: e_exchangeRates
+            columns:
+              - column:
+                  name: e_base_currency_id
+                  value: 1
+              - column:
+                  name: e_target_currency_id
+                  value: 4
+              - column:
+                  name: e_rate
+                  value: 36.95
