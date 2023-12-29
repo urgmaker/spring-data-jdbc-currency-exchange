@@ -12,10 +12,10 @@ import pet.project.currencyexchange.model.NewExchangeRatePayload;
 import pet.project.currencyexchange.repositories.ExchangeRateRepositoryImpl;
 import pet.project.currencyexchange.util.ErrorsPresentation;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api")
@@ -49,9 +49,9 @@ public class ExchangeRateController {
             @RequestBody NewExchangeRatePayload payloadExchangeRate,
             UriComponentsBuilder uriComponentsBuilder,
             Locale locale) {
-        if (payloadExchangeRate.getBaseCurrencyId() == null &&
-            payloadExchangeRate.getTargetCurrencyId() == null &&
-            payloadExchangeRate.getRate() == null) {
+        if ((payloadExchangeRate.getBaseCurrencyId() == null || payloadExchangeRate.getBaseCurrencyId() <= 0) &&
+            (payloadExchangeRate.getTargetCurrencyId() == null || payloadExchangeRate.getTargetCurrencyId() <= 0) &&
+            (payloadExchangeRate.getRate() == null || payloadExchangeRate.getRate() <= 0)) {
             final String message = this.messageSource.getMessage("currencies.create.details.errors.not_set",
                     new Object[0], locale);
 
@@ -59,22 +59,19 @@ public class ExchangeRateController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(new ErrorsPresentation(List.of(message)));
         } else {
-            ExchangeRate exchangeRate = new ExchangeRate(
-                    payloadExchangeRate.getBaseCurrencyId(),
-                    payloadExchangeRate.getTargetCurrencyId(),
-                    payloadExchangeRate.getRate());
+            payloadExchangeRate.setId(UUID.randomUUID());
+            ExchangeRate exchangeRate = ExchangeRate.builder()
+                    .id(payloadExchangeRate.getId())
+                    .baseCurrencyId(payloadExchangeRate.getBaseCurrencyId())
+                    .targetCurrencyId(payloadExchangeRate.getTargetCurrencyId())
+                    .rate(payloadExchangeRate.getRate())
+                    .build();
 
             this.exchangeRateRepository.save(exchangeRate);
 
-            URI uri = null;
-            if (exchangeRate.getId() != null) {
-                uri = uriComponentsBuilder
-                        .path("api/exchangeRates/{id}")
-                        .build(Map.of("id", exchangeRate.getId()));
-            } else {
-                uri = uriComponentsBuilder.path("api/exchangeRates").build().toUri();
-            }
-            return ResponseEntity.created(uri)
+            return ResponseEntity.created(uriComponentsBuilder
+                            .path("api/exchangeRates/{id}")
+                            .build(Map.of("e_id", exchangeRate.getId())))
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(exchangeRate);
         }

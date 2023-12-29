@@ -12,10 +12,10 @@ import pet.project.currencyexchange.model.NewCurrencyPayload;
 import pet.project.currencyexchange.repositories.CurrencyRepositoryImpl;
 import pet.project.currencyexchange.util.ErrorsPresentation;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api")
@@ -53,19 +53,19 @@ public class CurrencyController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(new ErrorsPresentation(List.of(message)));
         } else {
-            Currency currency = new Currency(payloadCurrency.getCode(), payloadCurrency.getFullName(), payloadCurrency.getSign());
+            payloadCurrency.setId(UUID.randomUUID());
+            Currency currency = Currency.builder()
+                    .id(payloadCurrency.getId())
+                    .code(payloadCurrency.getCode())
+                    .fullName(payloadCurrency.getFullName())
+                    .sign(payloadCurrency.getSign())
+                    .build();
+
             this.currencyRepository.save(currency);
 
-            URI uri = null;
-            if (currency.getId() != null) {
-                uri = uriComponentsBuilder
-                        .path("api/currencies/{id}")
-                        .build(Map.of("id", currency.getId()));
-            } else {
-                uri = uriComponentsBuilder.path("api/currencies").build().toUri();
-            }
-
-            return ResponseEntity.created(uri)
+            return ResponseEntity.created(uriComponentsBuilder
+                            .path("api/currencies/{id}")
+                            .build(Map.of("c_id", currency.getId())))
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(currency);
         }

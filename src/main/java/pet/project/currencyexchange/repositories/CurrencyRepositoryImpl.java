@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class CurrencyRepositoryImpl implements CurrencyRepository, RowMapper<Currency> {
@@ -45,7 +46,7 @@ public class CurrencyRepositoryImpl implements CurrencyRepository, RowMapper<Cur
     @Override
     public Currency mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Currency(
-                rs.getLong("c_id"),
+                rs.getObject("c_id", UUID.class),
                 rs.getString("c_code"),
                 rs.getString("c_full_name"),
                 rs.getString("c_sign"));

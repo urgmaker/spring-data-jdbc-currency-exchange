@@ -1,13 +1,16 @@
 package pet.project.currencyexchange.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
+@Builder
 public class NewExchangeRatePayload {
+    private UUID id;
     private Integer baseCurrencyId;
     private Integer targetCurrencyId;
     private Double rate;

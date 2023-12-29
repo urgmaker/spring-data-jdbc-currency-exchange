@@ -4,19 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.UUID;
+
 
 @Data
 @AllArgsConstructor
 @Builder
 public class ExchangeRate {
-    private Long id;
+    private UUID id;
     private Integer baseCurrencyId;
     private Integer targetCurrencyId;
     private Double rate;
-
-    public ExchangeRate(Integer baseCurrencyId, Integer targetCurrencyId, Double rate) {
-        this.baseCurrencyId = baseCurrencyId;
-        this.targetCurrencyId = targetCurrencyId;
-        this.rate = rate;
-    }
 }

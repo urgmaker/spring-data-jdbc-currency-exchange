@@ -2,20 +2,18 @@ package pet.project.currencyexchange.model;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+
+import java.util.UUID;
 
 
 @Data
 @AllArgsConstructor
+@Builder
 public class Currency {
-    private Long id;
+    private UUID id;
     private String code;
     private String fullName;
     private String sign;
-
-    public Currency(String code, String fullName, String sign) {
-        this.code = code;
-        this.fullName = fullName;
-        this.sign = sign;
-    }
 }
