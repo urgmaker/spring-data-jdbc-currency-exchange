@@ -1,18 +1,18 @@
 databaseChangeLog:
   - changeSet:
-      id: create-table-1
+      id: create-table-c_currencies
       author: urgmaker
       changes:
         - createTable:
             tableName: c_currencies
             columns:
               - column:
-                  name: id
-                  type: uuid
+                  name: c_id
+                  type: serial
                   constraints:
                     primaryKey: true
                     nullable: false
-                  defaultValueComputed: gen_random_uuid()
+                  autoIncrement: true
               - column:
                   name: c_code
                   type: varchar(100)
@@ -29,19 +29,19 @@ databaseChangeLog:
                   constraints:
                     nullable: false
   - changeSet:
-      id: create-table-2
+      id: create-table-e_exchangeRates
       author: urgmaker
       changes:
         - createTable:
             tableName: e_exchangeRates
             columns:
               - column:
-                  name: id
-                  type: uuid
+                  name: e_id
+                  type: serial
                   constraints:
                     primaryKey: true
                     nullable: false
-                  defaultValueComputed: gen_random_uuid()
+                  autoIncrement: true
               - column:
                   name: e_base_currency_id
                   type: integer
@@ -73,3 +73,23 @@ databaseChangeLog:
                   name: e_base_currency_id
               - column:
                   name: e_target_currency_id
+  - changeSet:
+      id: create-foreign-key-base
+      author: urgmaker
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: e_exchangeRates
+            baseColumnNames: e_base_currency_id
+            constraintName: fk_e_base_currency_id
+            referencedTableName: c_currencies
+            referencedColumnNames: c_id
+  - changeSet:
+      id: create-foreign-key-target
+      author: urgmaker
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: e_exchangeRates
+            baseColumnNames: e_target_currency_id
+            constraintName: fk_e_target_currency_id
+            referencedTableName: c_currencies
+            referencedColumnNames: c_id

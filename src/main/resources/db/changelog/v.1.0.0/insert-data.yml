@@ -43,7 +43,7 @@ databaseChangeLog:
                   value: 1
               - column:
                   name: e_target_currency_id
-                  value: 3
+                  value: 2
               - column:
                   name: e_rate
                   value: 63.75
@@ -59,7 +59,7 @@ databaseChangeLog:
                   value: 1
               - column:
                   name: e_target_currency_id
-                  value: 4
+                  value: 2
               - column:
                   name: e_rate
                   value: 36.95
