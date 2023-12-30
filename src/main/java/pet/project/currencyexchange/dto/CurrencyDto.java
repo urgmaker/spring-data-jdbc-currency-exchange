@@ -1,15 +1,12 @@
-package pet.project.currencyexchange.model;
+package pet.project.currencyexchange.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 
 @Data
 @AllArgsConstructor
-@Builder
-public class NewCurrencyPayload {
-    private Integer id;
+public class CurrencyDto {
     private String code;
     private String fullName;
     private String sign;

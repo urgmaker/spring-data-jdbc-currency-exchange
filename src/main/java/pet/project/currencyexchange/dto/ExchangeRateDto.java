@@ -1,15 +1,12 @@
-package pet.project.currencyexchange.model;
+package pet.project.currencyexchange.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 
 @Data
 @AllArgsConstructor
-@Builder
-public class NewExchangeRatePayload {
-    private Integer id;
+public class ExchangeRateDto {
     private Integer baseCurrencyId;
     private Integer targetCurrencyId;
     private Double rate;

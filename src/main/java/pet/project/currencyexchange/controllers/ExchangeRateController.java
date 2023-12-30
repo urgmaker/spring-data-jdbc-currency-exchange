@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import pet.project.currencyexchange.model.ExchangeRate;
-import pet.project.currencyexchange.model.NewExchangeRatePayload;
-import pet.project.currencyexchange.repositories.ExchangeRateRepositoryImpl;
+import pet.project.currencyexchange.dto.ExchangeRateDto;
+import pet.project.currencyexchange.repositories.ExchangeRateRepository;
 import pet.project.currencyexchange.util.ErrorsPresentation;
 
 import java.util.*;
@@ -17,12 +17,12 @@ import java.util.*;
 @RestController
 @RequestMapping("api")
 public class ExchangeRateController {
-    private final ExchangeRateRepositoryImpl exchangeRateRepository;
+    private final ExchangeRateRepository exchangeRateRepository;
 
     private final MessageSource messageSource;
 
     @Autowired
-    public ExchangeRateController(ExchangeRateRepositoryImpl exchangeRateRepository, MessageSource messageSource) {
+    public ExchangeRateController(ExchangeRateRepository exchangeRateRepository, MessageSource messageSource) {
         this.exchangeRateRepository = exchangeRateRepository;
         this.messageSource = messageSource;
     }
@@ -31,24 +31,24 @@ public class ExchangeRateController {
     public ResponseEntity<List<ExchangeRate>> handleGetAllExchangeRates() {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(this.exchangeRateRepository.findAll());
+                .body((List<ExchangeRate>) this.exchangeRateRepository.findAll());
     }
 
     @GetMapping("exchangeRate/{baseCurrencyId}/{targetCurrencyId}")
     public ResponseEntity<ExchangeRate> handleExchangeRatesByCode(@PathVariable("baseCurrencyId") Integer baseCurrencyId,
                                                                   @PathVariable("targetCurrencyId") Integer targetCurrencyId) {
-        return ResponseEntity.of(this.exchangeRateRepository.findById(baseCurrencyId, targetCurrencyId));
+        return ResponseEntity.of(this.exchangeRateRepository.findByBaseIdAndTargetId(baseCurrencyId, targetCurrencyId));
     }
 
     @PostMapping("exchangeRates")
     @Transactional
     public ResponseEntity<?> handleAddExchangeRate(
-            @RequestBody NewExchangeRatePayload payloadExchangeRate,
+            @RequestBody ExchangeRateDto uploadExchangeRate,
             UriComponentsBuilder uriComponentsBuilder,
             Locale locale) {
-        if ((payloadExchangeRate.getBaseCurrencyId() == null || payloadExchangeRate.getBaseCurrencyId() <= 0) &&
-            (payloadExchangeRate.getTargetCurrencyId() == null || payloadExchangeRate.getTargetCurrencyId() <= 0) &&
-            (payloadExchangeRate.getRate() == null || payloadExchangeRate.getRate() <= 0)) {
+        if ((uploadExchangeRate.getBaseCurrencyId() == null || uploadExchangeRate.getBaseCurrencyId() <= 0) &&
+            (uploadExchangeRate.getTargetCurrencyId() == null || uploadExchangeRate.getTargetCurrencyId() <= 0) &&
+            (uploadExchangeRate.getRate() == null || uploadExchangeRate.getRate() <= 0)) {
             final String message = this.messageSource.getMessage("currencies.create.details.errors.not_set",
                     new Object[0], locale);
 
@@ -56,14 +56,10 @@ public class ExchangeRateController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(new ErrorsPresentation(List.of(message)));
         } else {
-            Random random = new Random();
-            payloadExchangeRate.setId(random.nextInt());
-            ExchangeRate exchangeRate = ExchangeRate.builder()
-                    .id(payloadExchangeRate.getId())
-                    .baseCurrencyId(payloadExchangeRate.getBaseCurrencyId())
-                    .targetCurrencyId(payloadExchangeRate.getTargetCurrencyId())
-                    .rate(payloadExchangeRate.getRate())
-                    .build();
+            ExchangeRate exchangeRate = new ExchangeRate(
+                    uploadExchangeRate.getBaseCurrencyId(),
+                    uploadExchangeRate.getTargetCurrencyId(),
+                    uploadExchangeRate.getRate());
 
             this.exchangeRateRepository.save(exchangeRate);
 

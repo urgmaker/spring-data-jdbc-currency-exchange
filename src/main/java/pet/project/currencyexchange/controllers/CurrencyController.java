@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import pet.project.currencyexchange.model.Currency;
-import pet.project.currencyexchange.model.NewCurrencyPayload;
-import pet.project.currencyexchange.repositories.CurrencyRepositoryImpl;
+import pet.project.currencyexchange.dto.CurrencyDto;
+import pet.project.currencyexchange.repositories.CurrencyRepository;
 import pet.project.currencyexchange.util.ErrorsPresentation;
 
 import java.util.*;
@@ -17,11 +17,11 @@ import java.util.*;
 @RestController
 @RequestMapping("api")
 public class CurrencyController {
-    private final CurrencyRepositoryImpl currencyRepository;
+    private final CurrencyRepository currencyRepository;
     private final MessageSource messageSource;
 
     @Autowired
-    public CurrencyController(CurrencyRepositoryImpl currencyRepository, MessageSource messageSource) {
+    public CurrencyController(CurrencyRepository currencyRepository, MessageSource messageSource) {
         this.currencyRepository = currencyRepository;
         this.messageSource = messageSource;
     }
@@ -30,18 +30,18 @@ public class CurrencyController {
     public ResponseEntity<List<Currency>> handleGetAllCurrencies() {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(this.currencyRepository.findAll());
+                .body((List<Currency>) this.currencyRepository.findAll());
     }
 
     @PostMapping("currencies")
     @Transactional
     public ResponseEntity<?> handleAddCurrency(
-            @RequestBody NewCurrencyPayload payloadCurrency,
+            @RequestBody CurrencyDto uploadCurrency,
             UriComponentsBuilder uriComponentsBuilder,
             Locale locale) {
-        if ((payloadCurrency.getCode() == null || payloadCurrency.getCode().isBlank()) &&
-            (payloadCurrency.getFullName() == null || payloadCurrency.getFullName().isBlank()) &&
-            (payloadCurrency.getSign() == null || payloadCurrency.getSign().isBlank())) {
+        if ((uploadCurrency.getCode() == null || uploadCurrency.getCode().isBlank()) &&
+            (uploadCurrency.getFullName() == null || uploadCurrency.getFullName().isBlank()) &&
+            (uploadCurrency.getSign() == null || uploadCurrency.getSign().isBlank())) {
             final String message = this.messageSource.getMessage(
                     "currencies.create.details.errors.not_set",
                     new Object[0], locale);
@@ -50,22 +50,14 @@ public class CurrencyController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(new ErrorsPresentation(List.of(message)));
         } else {
-            Random random = new Random();
-            payloadCurrency.setId(random.nextInt());
-            Currency currency = Currency.builder()
-                    .id(payloadCurrency.getId())
-                    .code(payloadCurrency.getCode())
-                    .fullName(payloadCurrency.getFullName())
-                    .sign(payloadCurrency.getSign())
-                    .build();
-
+            Currency currency = new Currency(uploadCurrency.getCode(), uploadCurrency.getFullName(), uploadCurrency.getSign());
             this.currencyRepository.save(currency);
 
             return ResponseEntity.created(uriComponentsBuilder
                             .path("api/currencies/{id}")
                             .build(Map.of("id", currency.getId())))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(currency);
+                    .body((currency));
         }
     }
 

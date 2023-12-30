@@ -1,17 +1,21 @@
 package pet.project.currencyexchange.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-
-
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 @Data
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor
 public class ExchangeRate {
-    private Integer id;
+    @Id
+    private Long id;
     private Integer baseCurrencyId;
     private Integer targetCurrencyId;
     private Double rate;
+
+    public ExchangeRate(Integer baseCurrencyId, Integer targetCurrencyId, Double rate) {
+        this.baseCurrencyId = baseCurrencyId;
+        this.targetCurrencyId = targetCurrencyId;
+        this.rate = rate;
+    }
 }
