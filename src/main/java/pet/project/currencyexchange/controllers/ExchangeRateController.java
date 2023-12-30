@@ -12,10 +12,7 @@ import pet.project.currencyexchange.model.NewExchangeRatePayload;
 import pet.project.currencyexchange.repositories.ExchangeRateRepositoryImpl;
 import pet.project.currencyexchange.util.ErrorsPresentation;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("api")
@@ -59,7 +56,8 @@ public class ExchangeRateController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(new ErrorsPresentation(List.of(message)));
         } else {
-            payloadExchangeRate.setId(UUID.randomUUID());
+            Random random = new Random();
+            payloadExchangeRate.setId(random.nextInt());
             ExchangeRate exchangeRate = ExchangeRate.builder()
                     .id(payloadExchangeRate.getId())
                     .baseCurrencyId(payloadExchangeRate.getBaseCurrencyId())
@@ -71,7 +69,7 @@ public class ExchangeRateController {
 
             return ResponseEntity.created(uriComponentsBuilder
                             .path("api/exchangeRates/{id}")
-                            .build(Map.of("e_id", exchangeRate.getId())))
+                            .build(Map.of("id", exchangeRate.getId())))
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(exchangeRate);
         }

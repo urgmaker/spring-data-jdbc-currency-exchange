@@ -12,10 +12,7 @@ import pet.project.currencyexchange.model.NewCurrencyPayload;
 import pet.project.currencyexchange.repositories.CurrencyRepositoryImpl;
 import pet.project.currencyexchange.util.ErrorsPresentation;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("api")
@@ -53,7 +50,8 @@ public class CurrencyController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(new ErrorsPresentation(List.of(message)));
         } else {
-            payloadCurrency.setId(UUID.randomUUID());
+            Random random = new Random();
+            payloadCurrency.setId(random.nextInt());
             Currency currency = Currency.builder()
                     .id(payloadCurrency.getId())
                     .code(payloadCurrency.getCode())
@@ -65,7 +63,7 @@ public class CurrencyController {
 
             return ResponseEntity.created(uriComponentsBuilder
                             .path("api/currencies/{id}")
-                            .build(Map.of("c_id", currency.getId())))
+                            .build(Map.of("id", currency.getId())))
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(currency);
         }

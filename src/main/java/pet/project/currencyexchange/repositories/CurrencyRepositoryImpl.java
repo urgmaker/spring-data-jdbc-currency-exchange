@@ -31,8 +31,8 @@ public class CurrencyRepositoryImpl implements CurrencyRepository, RowMapper<Cur
     @Override
     public void save(Currency currency) {
         this.jdbcOperations.update("""
-                insert into c_currencies(c_code, c_full_name, c_sign) values (?, ?, ?)
-                """, currency.getCode(), currency.getFullName(), currency.getSign());
+                insert into c_currencies(c_id, c_code, c_full_name, c_sign) values (?, ?, ?, ?)
+                """, currency.getId(), currency.getCode(), currency.getFullName(), currency.getSign());
     }
 
     @Override
@@ -46,7 +46,7 @@ public class CurrencyRepositoryImpl implements CurrencyRepository, RowMapper<Cur
     @Override
     public Currency mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Currency(
-                rs.getObject("c_id", UUID.class),
+                rs.getInt("c_id"),
                 rs.getString("c_code"),
                 rs.getString("c_full_name"),
                 rs.getString("c_sign"));
