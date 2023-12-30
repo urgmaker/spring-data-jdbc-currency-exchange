@@ -1,63 +1,63 @@
 databaseChangeLog:
   - changeSet:
-      id: create-table-c_currencies
+      id: create-table-currency
       author: urgmaker
       changes:
         - createTable:
-            tableName: c_currencies
+            tableName: currency
             columns:
               - column:
-                  name: c_id
+                  name: id
                   type: serial
                   constraints:
                     primaryKey: true
                     nullable: false
                   autoIncrement: true
               - column:
-                  name: c_code
+                  name: code
                   type: varchar(100)
                   constraints:
                     nullable: false
               - column:
-                  name: c_full_name
+                  name: full_name
                   type: varchar(100)
                   constraints:
                     nullable: false
               - column:
-                  name: c_sign
+                  name: sign
                   type: varchar(100)
                   constraints:
                     nullable: false
   - changeSet:
-      id: create-table-e_exchangeRates
+      id: create-table-exchange_rate
       author: urgmaker
       changes:
         - createTable:
-            tableName: e_exchangeRates
+            tableName: exchange_rate
             columns:
               - column:
-                  name: e_id
+                  name: id
                   type: serial
                   constraints:
                     primaryKey: true
                     nullable: false
                   autoIncrement: true
               - column:
-                  name: e_base_currency_id
+                  name: base_currency_id
                   type: integer
                   constraints:
-                    referencedTableName: c_currencies
-                    referencedColumnNames: c_id
-                    foreignKeyName: fk_e_exchangeRates_base_currency
+                    referencedTableName: currency
+                    referencedColumnNames: id
+                    foreignKeyName: fk_exchange_rate_base_currency
               - column:
-                  name: e_target_currency_id
+                  name: target_currency_id
                   type: integer
                   constraints:
-                    referencedTableName: c_currencies
-                    referencedColumnNames: c_id
-                    foreignKeyName: fk_e_exchangeRates_target_currency
+                    referencedTableName: currency
+                    referencedColumnNames: id
+                    foreignKeyName: fk_exchange_rate_target_currency
               - column:
-                  name: e_rate
+                  name: rate
                   type: decimal(8, 6)
                   constraints:
                     nullable: false
@@ -67,29 +67,29 @@ databaseChangeLog:
       changes:
         - createIndex:
             indexName: idx_currency
-            tableName: e_exchangeRates
+            tableName: exchange_rate
             columns:
               - column:
-                  name: e_base_currency_id
+                  name: base_currency_id
               - column:
-                  name: e_target_currency_id
+                  name: target_currency_id
   - changeSet:
       id: create-foreign-key-base
       author: urgmaker
       changes:
         - addForeignKeyConstraint:
-            baseTableName: e_exchangeRates
-            baseColumnNames: e_base_currency_id
-            constraintName: fk_e_base_currency_id
-            referencedTableName: c_currencies
-            referencedColumnNames: c_id
+            baseTableName: exchange_rate
+            baseColumnNames: base_currency_id
+            constraintName: fk_base_currency_id
+            referencedTableName: currency
+            referencedColumnNames: id
   - changeSet:
       id: create-foreign-key-target
       author: urgmaker
       changes:
         - addForeignKeyConstraint:
-            baseTableName: e_exchangeRates
-            baseColumnNames: e_target_currency_id
-            constraintName: fk_e_target_currency_id
-            referencedTableName: c_currencies
-            referencedColumnNames: c_id
+            baseTableName: exchange_rate
+            baseColumnNames: target_currency_id
+            constraintName: fk_target_currency_id
+            referencedTableName: currency
+            referencedColumnNames: id

@@ -4,62 +4,62 @@ databaseChangeLog:
       author: urgmaker
       changes:
         - insert:
-            tableName: c_currencies
+            tableName: currency
             columns:
               - column:
-                  name: c_code
+                  name: code
                   value: USD
               - column:
-                  name: c_full_name
+                  name: full_name
                   value: US Dollar
               - column:
-                  name: c_sign
+                  name: sign
                   value: $
   - changeSet:
       id: insert-data-2
       author: urgmaker
       changes:
         - insert:
-            tableName: c_currencies
+            tableName: currency
             columns:
               - column:
-                  name: c_code
+                  name: code
                   value: EUR
               - column:
-                  name: c_full_name
+                  name: full_name
                   value: Euro
               - column:
-                  name: c_sign
+                  name: sign
                   value: €
   - changeSet:
       id: insert-data-3
       author: urgmaker
       changes:
         - insert:
-            tableName: e_exchangeRates
+            tableName: exchange_rate
             columns:
               - column:
-                  name: e_base_currency_id
+                  name: base_currency_id
                   value: 1
               - column:
-                  name: e_target_currency_id
+                  name: target_currency_id
                   value: 2
               - column:
-                  name: e_rate
+                  name: rate
                   value: 63.75
   - changeSet:
       id: insert-data-4
       author: urgmaker
       changes:
         - insert:
-            tableName: e_exchangeRates
+            tableName: exchange_rate
             columns:
               - column:
-                  name: e_base_currency_id
+                  name: base_currency_id
                   value: 1
               - column:
-                  name: e_target_currency_id
+                  name: target_currency_id
                   value: 2
               - column:
-                  name: e_rate
+                  name: rate
                   value: 36.95
