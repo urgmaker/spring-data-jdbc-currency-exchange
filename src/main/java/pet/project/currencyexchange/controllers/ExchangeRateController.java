@@ -31,13 +31,13 @@ public class ExchangeRateController {
     public ResponseEntity<List<ExchangeRate>> handleGetAllExchangeRates() {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body((List<ExchangeRate>) this.exchangeRateRepository.findAll());
+                .body(this.exchangeRateRepository.findAll());
     }
 
-    @GetMapping("exchangeRate/{baseCurrencyId}/{targetCurrencyId}")
-    public ResponseEntity<ExchangeRate> handleExchangeRatesByCode(@PathVariable("baseCurrencyId") Integer baseCurrencyId,
-                                                                  @PathVariable("targetCurrencyId") Integer targetCurrencyId) {
-        return ResponseEntity.of(this.exchangeRateRepository.findByBaseIdAndTargetId(baseCurrencyId, targetCurrencyId));
+    @GetMapping("exchangeRate/{baseCurrencyCode}/{targetCurrencyCode}")
+    public ResponseEntity<ExchangeRate> handleGetExchangeRatesByCodes(@PathVariable("baseCurrencyCode") String baseCurrencyCode,
+                                                                      @PathVariable("targetCurrencyCode") String targetCurrencyCode) {
+        return ResponseEntity.of(this.exchangeRateRepository.findByCodes(baseCurrencyCode, targetCurrencyCode));
     }
 
     @PostMapping("exchangeRates")
@@ -46,8 +46,8 @@ public class ExchangeRateController {
             @RequestBody ExchangeRateDto uploadExchangeRate,
             UriComponentsBuilder uriComponentsBuilder,
             Locale locale) {
-        if ((uploadExchangeRate.getBaseCurrencyId() == null || uploadExchangeRate.getBaseCurrencyId() <= 0) &&
-            (uploadExchangeRate.getTargetCurrencyId() == null || uploadExchangeRate.getTargetCurrencyId() <= 0) &&
+        if ((uploadExchangeRate.getBaseCurrencyCode() == null || uploadExchangeRate.getBaseCurrencyCode().getCode().isBlank()) &&
+            (uploadExchangeRate.getTargetCurrencyCode() == null || uploadExchangeRate.getTargetCurrencyCode().getCode().isBlank()) &&
             (uploadExchangeRate.getRate() == null || uploadExchangeRate.getRate() <= 0)) {
             final String message = this.messageSource.getMessage("currencies.create.details.errors.not_set",
                     new Object[0], locale);
@@ -57,8 +57,8 @@ public class ExchangeRateController {
                     .body(new ErrorsPresentation(List.of(message)));
         } else {
             ExchangeRate exchangeRate = new ExchangeRate(
-                    uploadExchangeRate.getBaseCurrencyId(),
-                    uploadExchangeRate.getTargetCurrencyId(),
+                    uploadExchangeRate.getBaseCurrencyCode(),
+                    uploadExchangeRate.getTargetCurrencyCode(),
                     uploadExchangeRate.getRate());
 
             this.exchangeRateRepository.save(exchangeRate);
