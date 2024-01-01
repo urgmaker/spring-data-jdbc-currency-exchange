@@ -9,13 +9,13 @@ import org.springframework.data.annotation.Id;
 public class ExchangeRate {
     @Id
     private Long id;
-    private Integer baseCurrencyId;
-    private Integer targetCurrencyId;
+    private Currency baseCurrency;
+    private Currency targetCurrency;
     private Double rate;
 
-    public ExchangeRate(Integer baseCurrencyId, Integer targetCurrencyId, Double rate) {
-        this.baseCurrencyId = baseCurrencyId;
-        this.targetCurrencyId = targetCurrencyId;
+    public ExchangeRate(Currency baseCurrency, Currency targetCurrency, Double rate) {
+        this.baseCurrency = baseCurrency;
+        this.targetCurrency = targetCurrency;
         this.rate = rate;
     }
 }
