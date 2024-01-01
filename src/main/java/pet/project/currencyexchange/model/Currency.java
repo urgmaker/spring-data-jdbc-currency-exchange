@@ -20,6 +20,6 @@ public class Currency {
     public Currency(String code, String fullName, String sign) {
         this.code = code;
         this.fullName = fullName;
-        this.sign = sig;
+        this.sign = sign;
     }
 }
