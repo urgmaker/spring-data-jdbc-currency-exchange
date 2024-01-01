@@ -62,7 +62,7 @@ public class CurrencyController {
     }
 
     @GetMapping("currency/{code}")
-    public ResponseEntity<Currency> handleFindTaskByCode(@PathVariable("code") String code) {
+    public ResponseEntity<Currency> handleFindCurrencyByCode(@PathVariable("code") String code) {
         return ResponseEntity.of(this.currencyRepository.findByCode(code));
     }
 }
