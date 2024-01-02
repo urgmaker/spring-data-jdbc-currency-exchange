@@ -6,9 +6,9 @@ POST http://localhost:8080/api/currencies
 Content-Type: application/json
 
 {
-  "code": "TTT",
-  "fullName": "Tst",
-  "sign": "T"
+  "code": "RUB",
+  "fullName": "Russian Ruble",
+  "sign": "₽"
 }
 
 ###
@@ -19,16 +19,16 @@ GET http://localhost:8080/api/currency/{{code}}
 GET http://localhost:8080/api/exchangeRates
 
 ###
-@baseCurrencyId =1
-@targetCurrencyId =2
-GET http://localhost:8080/api/exchangeRate/{{baseCurrencyId}}/{{targetCurrencyId}}
+@baseCurrencyCode =EUR
+@targetCurrencyCode =USD
+GET http://localhost:8080/api/exchangeRate/{{baseCurrencyCode}}/{{targetCurrencyCode}}
 
 ###
 POST http://localhost:8080/api/exchangeRates
 Content-Type: application/json
 
 {
-  "baseCurrencyId": 1,
-  "targetCurrencyId": 2,
-  "rate": 50.1
+  "baseCurrencyCode": "USD",
+  "targetCurrencyCode": "RUB",
+  "rate": 11.2
 }

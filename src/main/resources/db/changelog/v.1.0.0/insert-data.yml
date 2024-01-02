@@ -56,10 +56,10 @@ databaseChangeLog:
             columns:
               - column:
                   name: base_currency_id
-                  value: 1
+                  value: 2
               - column:
                   name: target_currency_id
-                  value: 2
+                  value: 1
               - column:
                   name: rate
                   value: 36.95
